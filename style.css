@@ -1,0 +1,113 @@
+/* 全体（背景写真をここに設定） */
+body {
+  margin: 0;
+  background: url("background.jpg") center/cover no-repeat; /* ←背景写真をここに置く */
+  color: #1e293b;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  /* 背景写真が暗すぎ・明るすぎでも調整される */
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* 誠実さを保ちつつ見やすいフィルター */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px); /* ほんのりぼかす */
+  z-index: 0;
+}
+
+/* メインカード */
+.card {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px 24px 34px;
+  border-radius: 22px;
+
+  /* 半透明の白で誠実さと読みやすさを両立 */
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 12px 24px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(15, 23, 42, 0.05);
+
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* アイコン */
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  margin-bottom: 14px;
+}
+
+/* 名前 */
+h1 {
+  margin: 6px 0 4px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* プロフィール文 */
+.bio {
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* リンク一覧 */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+/* リンクボタン */
+.links a {
+  display: block;
+  text-decoration: none;
+  padding: 13px 15px;
+  border-radius: 14px;
+
+  background: rgba(226, 232, 240, 0.8); /* 青みグレー半透明 */
+  color: #1e3a8a;
+  font-size: 0.96rem;
+  font-weight: 500;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+
+  backdrop-filter: blur(2px);
+  transition: 0.15s ease;
+}
+
+.links a:hover {
+  background: rgba(203, 213, 225, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(30, 64, 175, 0.15);
+}
+
+/* フッター */
+.footer {
+  margin-top: 18px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+body {
+  background-image: url('background.jpg');
+}

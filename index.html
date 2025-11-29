@@ -2,219 +2,29 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>あなたのメモ帳</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      background: #f5f5f5;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 12px;
-    }
-
-    h1 { text-align: center; font-size: 22px; margin: 10px 0 16px; }
-    h2 { font-size: 18px; margin-top: 16px; }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-      font-size: 16px;
-      background: #fff;
-    }
-
-    textarea { height: 140px; resize: vertical; }
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 999px;
-      border: none;
-      background: #3f51b5;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      width: 100%;
-    }
-
-    button:active {
-      transform: translateY(1px);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-
-    .status { margin-top: 6px; font-size: 12px; color: #444; }
-
-    .list {
-      margin-top: 10px;
-      max-height: 360px;
-      overflow-y: auto;
-    }
-
-    .memo-item {
-      background: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .memo-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 4px;
-    }
-
-    .memo-author {
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .memo-date {
-      font-size: 11px;
-      color: #777;
-    }
-
-    .memo-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .memo-text {
-      white-space: pre-wrap;
-      font-size: 13px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hiroki Links</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <h1>あなたのメモ帳</h1>
+  <div class="card">
 
-  <h2>メモを書く</h2>
-  <input id="name" placeholder="あなたの名前（ニックネームでもOK）">
-  <input id="title" placeholder="タイトル">
-  <textarea id="text" placeholder="内容"></textarea>
+    <img src="icon.png" alt="icon" class="avatar">
 
-  <div class="buttons">
-    <button id="send">メモを投稿する</button>
+    <h1>Hiroki</h1>
+    <p class="bio">工学部の学生 / ゆるくプログラミングしてます</p>
+
+    <div class="links">
+      <a href="https://www.instagram.com/あなたのID" target="_blank">Instagram（作成中）</a>
+      <a href="https://x.com/@tgangg_" target="_blank">X（Twitter）</a>
+      <a href="https://www.youtube.com/@あなたのID" target="_blank">YouTube（作成中）</a>
+      <a href="https://www.tiktok.com/@あなたのID" target="_blank">TikTok（作成中）</a>
+    </div>
+
+    <p class="footer">© 2025 Hiroki</p>
+
   </div>
-
-  <div class="status" id="status"></div>
-
-  <h2>メモ</h2>
-  <div class="list" id="memoList"></div>
-</div>
-
-<!-- Firebase SDK（バージョン番号は公式ドキュメントの最新を使ってOK） -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // 🔥 ここを自分のfirebaseConfigに差し替える
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  // Firebase初期化
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  const nameInput = document.getElementById("name");
-  const titleInput = document.getElementById("title");
-  const textInput = document.getElementById("text");
-  const sendButton = document.getElementById("send");
-  const status = document.getElementById("status");
-  const memoList = document.getElementById("memoList");
-
-  // メモを投稿
-  sendButton.onclick = async () => {
-    const name = nameInput.value.trim() || "ななし";
-    const title = titleInput.value.trim() || "(無題)";
-    const text = textInput.value.trim();
-
-    if (!text) {
-      status.textContent = "内容が空のメモは投稿しないよ。";
-      return;
-    }
-
-    status.textContent = "投稿中…";
-
-    try {
-      await db.collection("memos").add({
-        author: name,
-        title: title,
-        text: text,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-      titleInput.value = "";
-      textInput.value = "";
-      status.textContent = "投稿しました！";
-    } catch (e) {
-      console.error(e);
-      status.textContent = "投稿に失敗したかも…あとでやり直してみて。";
-    }
-  };
-
-  // メモ一覧をリアルタイムで取得
-  db.collection("memos")
-    .orderBy("createdAt", "desc")
-    .onSnapshot((snapshot) => {
-      memoList.innerHTML = "";
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const div = document.createElement("div");
-        div.className = "memo-item";
-
-        const createdAt = data.createdAt ? data.createdAt.toDate() : null;
-        const dateText = createdAt
-          ? createdAt.toLocaleString()
-          : "日時不明";
-
-        div.innerHTML = `
-          <div class="memo-header">
-            <div class="memo-author">${data.author || "ななし"}</div>
-            <div class="memo-date">${dateText}</div>
-          </div>
-          <div class="memo-title">${data.title || "(無題)"}</div>
-          <div class="memo-text">${(data.text || "").replace(/</g, "&lt;")}</div>
-        `;
-
-        memoList.appendChild(div);
-      });
-
-      if (snapshot.empty) {
-        const empty = document.createElement("div");
-        empty.style.fontSize = "13px";
-        empty.style.color = "#777";
-        empty.textContent = "まだメモがありません。上に書いて投稿してみてね。";
-        memoList.appendChild(empty);
-      }
-    });
-</script>
 </body>
 </html>
+
+<img src="background.jpg">
